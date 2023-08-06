@@ -1,0 +1,15 @@
+{
+    "configurations": [
+
+      {
+        "args": ["-v"],
+        "console": "integratedTerminal",
+        "module": "main",
+        "name": "pump-sensor-data-api-py3.10",
+        "request": "launch",
+        "showReturnValue": true,
+        "type": "python"
+      }
+    ],
+    "version": "0.2.0"
+  }
