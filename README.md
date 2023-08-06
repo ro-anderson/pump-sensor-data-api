@@ -69,7 +69,70 @@ curl -X 'GET' 'http://0.0.0.0:5001/data' -H 'accept: application/json'
 
 **POST Request:**
 ```bash
-curl -X 'POST' 'http://0.0.0.0:5001/receiveData' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{ "data": [ { "timestamp": "2018-04-18 04:41:00", "machine_status": "RECOVERING", "sensors": [ { "name": "sensor_07", "value": 11.37153 }, { "name": "sensor_47", "value": 29.513890000000004 } ] }, ... ] }'
+curl -X 'POST' \
+  'http://0.0.0.0:5001/receiveData' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{
+  "data": [
+    {
+      "timestamp": "2018-04-18 04:41:00",
+      "machine_status": "RECOVERING",
+      "sensors": [
+        {
+          "name": "sensor_07",
+          "value": 11.37153
+        },
+        {
+          "name": "sensor_47",
+          "value": 29.513890000000004
+        }
+      ]
+    },
+    {
+      "timestamp": "2018-04-18 04:42:00",
+      "machine_status": "RECOVERING",
+      "sensors": [
+        {
+          "name": "sensor_07",
+          "value": 11.32089
+        },
+        {
+          "name": "sensor_47",
+          "value": 29.513890000000004
+        }
+      ]
+    },
+    {
+      "timestamp": "2018-04-18 04:43:00",
+      "machine_status": "RECOVERING",
+      "sensors": [
+        {
+          "name": "sensor_07",
+          "value": 11.32089
+        },
+        {
+          "name": "sensor_47",
+          "value": 29.22454
+        }
+      ]
+    },
+    {
+      "timestamp": "2018-04-18 04:44:00",
+      "machine_status": "RECOVERING",
+      "sensors": [
+        {
+          "name": "sensor_07",
+          "value": 11.32813
+        },
+        {
+          "name": "sensor_47",
+          "value": 29.224536895752
+        }
+      ]
+    }
+  ]
+}'
 ```
 
 ## Project Structure
