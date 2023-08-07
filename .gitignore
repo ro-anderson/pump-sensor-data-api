@@ -160,3 +160,4 @@ cython_debug/
 #.idea/
 
 sensor_data.db
+sensor.csv
