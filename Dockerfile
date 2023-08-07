@@ -7,16 +7,20 @@ WORKDIR /app
 # Copy the local directory contents into the container
 COPY . /app
 
+# Install unzip utility
+RUN apt-get update && apt-get install -y unzip
+
 # Install poetry
 RUN curl -sSL https://install.python-poetry.org | python -
-
-#RUN poetry install
 
 # Update the PATH to include the Poetry binary
 ENV PATH="/root/.local/bin:${PATH}"
 
-# Check if sensor_data.db exists, if not, create it
-RUN [ ! -f /app/sensor_data.db ] && make create_db || echo "sensor_data.db exists"
+# Unzip the sensor_data.db.zip file
+RUN unzip sensor_data.db.zip
+
+# Check if the sensor_data.db file exists at the root of the project
+RUN [ -f /app/sensor_data.db ] || echo "The file sensor_data.db must be at the root of the project to run. Try to unzip manually before building the image."
 
 # Install the required dependencies using Poetry
 RUN poetry install
@@ -26,4 +30,3 @@ EXPOSE 5001
 
 # Command to run the application
 CMD ["make", "run"]
-
