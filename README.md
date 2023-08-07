@@ -1,73 +1,76 @@
-# Sensor Data API
+# Pump Sensor Data API
 
-This project provides a set of APIs to manage and process sensor data. It includes two main services: a data retrieval service and a data reception service. The project is built using FastAPI and makes use of SQLite for data storage.
+The Pump Sensor Data API is a FastAPI-based project that provides two main endpoints for working with pump sensor data. The API provides functionalities for filtering specific sensor data based on predefined criteria and for receiving and organizing the data in a specific format.
 
-## Table of Contents
+## Disclaimers
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Examples](#api-examples)
-- [Project Structure](#project-structure)
-- [Contributing](#contributing)
-- [License](#license)
+1. **Download the Sensor Data (Optional):**
+   The `sensor.csv` file is not included in the repository, but you don't need it to run the project as the `sensor_data.db` file is provided. If you want to recreate the database yourself, you can download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data) and place it in the root directory of the project, then run `make create_db`.
+
+2. **Data Filtering Constraints:**
+   At the project scope, the original constraints were to filter data from April 2018 for sensors 07 and 47 with values greater than 20 and less than 30. However, applying these constraints resulted in an empty table result. To maintain alignment with the project's intent, the following constraints are applied instead:
+   - Include values greater than 20 and less than 30 (sensor_47).
+   - Include values greater than 10 and less than 30 (sensor_07).
+
+3. **Database File Inclusion:**
+   Although it is not considered best practice to include a database file (sensor_data.db) in a repository, it has been included here for ease of use by others.
 
 ## Features
 
-- **Data Retrieval Service (GET API):** Fetches filtered sensor data based on specified criteria (e.g., date range, sensor values, etc.).
-- **Data Reception Service (POST API):** Accepts sensor data in JSON format and organizes it into a structured Pandas DataFrame.
+1. **GET Endpoint**: Filters the sensor data from April 2018 for sensors 07 and 47 with the values according to the constraints mentioned in the disclaimers.
+
+2. **POST Endpoint**: Receives the filtered data and organizes it into a Pandas DataFrame.
 
 ## Installation
 
-1. **Clone the Repository:**
-    ```bash
-    git clone https://github.com/yourusername/sensor-data-api.git
-    ```
+### With Poetry (Local Development)
 
-2. **Navigate to the Project Directory:**
-    ```bash
-    cd sensor-data-api
-    ```
+1. Clone the repository to your local machine.
+2. Install [Poetry](https://python-poetry.org/docs/#installation).
+3. Run the following commands:
 
-3. **Download the Sensor Data:**
-   The `sensor.csv` file is not included in the repository. You must download it from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data) and place it in the root directory of the project.
+   ```bash
+   poetry install
+   make run
+   ```
 
-4. **Create the SQLite Database:**
-    ```bash
-    make create_db
-    ```
+### With Docker Compose (Containerized Deployment)
 
-5. **Install Poetry (If Not Already Installed):**
-    ```bash
-    curl -sSL https://install.python-poetry.org | python -
-    ```
+1. Clone the repository to your local machine.
+2. Ensure you have [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+3. Download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data).
+4. Run the following command to create the SQLite database:
 
-6. **Install Project Dependencies with Poetry:**
-    ```bash
-    poetry install
-    ```
+   ```bash
+   make create_db
+   ```
 
-7. **Start the FastAPI Server Using the Make Command:**
-    ```bash
-    make run
-    ```
+5. Run the following command to build and start the containers:
 
-## Usage
+   ```bash
+   docker-compose up --build
+   ```
 
-1. **Access the APIs at:**
-    - GET request: `http://0.0.0.0:5001/data`
-    - POST request: `http://0.0.0.0:5001/receiveData`
+## API Endpoints
 
-## API Examples
+### GET Request
 
-You can use the following curl commands to interact with the APIs:
+Endpoint: `http://0.0.0.0:5001/data`
 
-**GET Request:**
+CURL Example:
+
 ```bash
-curl -X 'GET' 'http://0.0.0.0:5001/data' -H 'accept: application/json'
+curl -X 'GET' \
+  'http://0.0.0.0:5001/data' \
+  -H 'accept: application/json'
 ```
 
-**POST Request:**
+### POST Request
+
+Endpoint: `http://0.0.0.0:5001/receiveData`
+
+CURL Example:
+
 ```bash
 curl -X 'POST' \
   'http://0.0.0.0:5001/receiveData' \
@@ -135,32 +138,39 @@ curl -X 'POST' \
 }'
 ```
 
+## Swagger Documentation
+
+The application uses FastAPI, and you can access the automatically generated Swagger UI at:
+
+[http://0.0.0.0:5001/docs#](http://0.0.0.0:5001/docs#)
+
+### Main Swagger Page
+
+Here you can explore the API's endpoints, data structures, and more. The main page provides an overview of the available API methods.
+
+![Main Swagger Page](./images/main_swagger_page.png) <!-- Replace with the actual path to the screenshot -->
+
+### Executing Requests Through Swagger UI
+
+You can also execute API requests directly from the Swagger UI. Simply click on the endpoint you want to try, fill in any required parameters, and hit the "Execute" button.
+
+![Executing Requests](./images/executing_request.png) <!-- Replace with the actual path to the screenshot -->
+
 ## Project Structure
 
-````bash
-.
-├── Makefile
-├── README.md
-├── create_db.py
-├── main.py
-├── poetry.lock
-├── pyproject.toml
-├── sensor.csv              # MUST be there before running: make create_db
-├── sensor_data.db          # MUST be here before running the application (make run)
-└── src
-    ├── __init__.py
-    └── infra
-        ├── __init__.py
-        ├── config
-        │   ├── __init__.py
-        │   ├── db_base.py
-        │   └── db_config.py
-        └── test
-            └── __init__.py
+The project is structured as follows:
 
-````
-
-- `main.py`: Main file containing the FastAPI app and API endpoints.
-- `db_config.py`: Configuration for the SQLite database.
-- `db_base.py`: Base configuration for database interactions.
-
+```
+- src/
+  - infra/
+    - config/
+      - db_base.py
+      - db_config.py
+    - test/
+- main.py
+- create_db.py
+- Dockerfile
+- docker-compose.yml
+- Makefile
+- README.md
+```
