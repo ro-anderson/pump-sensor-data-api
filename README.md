@@ -5,15 +5,27 @@ The Pump Sensor Data API is a FastAPI-based project that provides two main endpo
 ## Disclaimers
 
 1. **Download the Sensor Data (Optional):**
-   The `sensor.csv` file is not included in the repository, but you don't need it to run the project as the `sensor_data.db` file is provided. If you want to recreate the database yourself, you can download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data) and place it in the root directory of the project, then run `make create_db`.
+   
+   The `sensor.csv` file is not included in the repository, but you don't need it to run the project as the `sensor_data.db.zip` is on the repo - You just need to unzip this file and create the `sensor_data.db` at the root of the project 
+   
+   - If you want to recreate the database yourself, you should:
+      
+      **i.** Download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data) and place it in the root directory of the project.
+      
+      **ii.** Inside a virtualenv (conda, python venv, etc) with `pandas`installed you should run:
+        ```bash
+        python create_db.py
+        ```
 
 2. **Data Filtering Constraints:**
-   At the project scope, the original constraints were to filter data from April 2018 for sensors 07 and 47 with values greater than 20 and less than 30. However, applying these constraints resulted in an empty table result. To maintain alignment with the project's intent, the following constraints are applied instead:
+  
+    At the project scope, the original constraints were to filter data from April 2018 for sensors 07 and 47 with values greater than 20 and less than 30. However, applying these constraints resulted in an empty table result. To maintain alignment with the project's intent, the following constraints are applied instead:
    - Include values greater than 20 and less than 30 (sensor_47).
    - Include values greater than 10 and less than 30 (sensor_07).
 
 3. **Database File Inclusion:**
-   Although it is not considered best practice to include a database file (sensor_data.db) in a repository, it has been included here for ease of use by others.
+   
+   Although it is not considered best practice to include a database file in a repository, it has been included here for ease of use by others developers as: `sensor_data.db.zip`
 
 ## Features
 
@@ -21,20 +33,9 @@ The Pump Sensor Data API is a FastAPI-based project that provides two main endpo
 
 2. **POST Endpoint**: Receives the filtered data and organizes it into a Pandas DataFrame.
 
-## Installation
+## Installation and Runnig
 
-### With Poetry (Local Development)
-
-1. Clone the repository to your local machine.
-2. Install [Poetry](https://python-poetry.org/docs/#installation).
-3. Run the following commands:
-
-   ```bash
-   poetry install
-   make run
-   ```
-
-### With Docker Compose (Containerized Deployment)
+### With Docker Compose (Recommended)
 
 1. Clone the repository to your local machine.
 2. Ensure you have [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
@@ -50,6 +51,34 @@ The Pump Sensor Data API is a FastAPI-based project that provides two main endpo
    ```bash
    docker-compose up --build
    ```
+
+
+### With Poetry (Local Development)
+
+1. Clone the repository to your local machine.
+2. unzip the `sensor_data.db.zip` file.
+  - On Linux:
+  ```bash
+# Install unzip utility
+sudo apt-get update && sudo apt-get install -y unzip
+
+# Unzip the sensor_data.db.zip file (must be on project root folder)
+unzip sensor_data.db.zip
+  ```
+2. Install [Poetry](https://python-poetry.org/docs/#installation).
+  - on Linux:
+  ```bash
+  # Install poetry
+curl -sSL https://install.python-poetry.org | python -
+  ```
+
+3. Run the following commands:
+
+   ```bash
+   poetry install
+   make run
+   ```
+
 
 ## API Endpoints
 
