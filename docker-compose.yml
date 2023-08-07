@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  sensor-data-api:
+    build: .
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./sensor_data.db:/app/sensor_data.db
