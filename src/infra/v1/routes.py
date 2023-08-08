@@ -1,6 +1,5 @@
 from fastapi import APIRouter
-
-from fastapi import FastAPI
+from src.infra.v1.models.sensors_model import DataInputModel
 from typing import List, Dict, Optional
 from src.infra.config import DBConnectionHandler
 from sqlalchemy.orm.exc import NoResultFound
@@ -70,21 +69,8 @@ async def get_data():
 
     return data_tuples
 
-
-class SensorData(BaseModel):
-    name: str
-    value: float
-
-class DataEntry(BaseModel):
-    timestamp: str
-    machine_status: str
-    sensors: List[SensorData]
-
-class DataInput(BaseModel):
-    data: List[DataEntry]
-
 @router.post("/receiveData")
-async def receive_data(input_data: DataInput):
+async def receive_data(input_data: DataInputModel):
     """Receives the filtered data and organizes it into a Pandas DataFrame that is printed at the service running terminal."""
 
     # Initialize an empty list to store the output rows
