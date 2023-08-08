@@ -18,13 +18,18 @@ def transform_data(data_tuples: List[tuple]) -> Dict:
     data = []
     for item in data_tuples:
         timestamp, sensor_07, sensor_47, machine_status = item
+        sensors = []
+
+        if sensor_07 is not None and 10 <= sensor_07 <= 30:
+            sensors.append({"name": "sensor_07", "value": sensor_07})
+        
+        if sensor_47 is not None and 20 <= sensor_47 <= 30:
+            sensors.append({"name": "sensor_47", "value": sensor_47})
+
         data_entry = {
             "timestamp": timestamp,
             "machine_status": machine_status,
-            "sensors": [
-                {"name": "sensor_07", "value": sensor_07},
-                {"name": "sensor_47", "value": sensor_47}
-            ]
+            "sensors": sensors
         }
         data.append(data_entry)
     return {"data": data}
@@ -84,7 +89,16 @@ async def receive_data(input_data: DataInputModel):
         machine_status = entry.machine_status
 
         for sensor in entry.sensors:
-            if 10 <= sensor.value <= 30:
+            # Apply different filtering constraints based on the sensor name
+            if sensor.name == "sensor_47" and 20 <= sensor.value <= 30:
+                output_rows.append({
+                    'Date': date,
+                    'Time': time,
+                    'Sensor': sensor.name,
+                    'Measurement': sensor.value,
+                    'Status': machine_status
+                })
+            elif sensor.name == "sensor_07" and 10 <= sensor.value <= 30:
                 output_rows.append({
                     'Date': date,
                     'Time': time,
