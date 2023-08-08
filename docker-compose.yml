@@ -1,8 +1,14 @@
 version: '3.8'
 
 services:
-  sensor-data-api:
-    build: .
+  app:
+    build:
+      context: .
+      target: prod
     ports:
       - "5001:5001"
- 
+
+  test:
+    build:
+      context: .
+      target: test

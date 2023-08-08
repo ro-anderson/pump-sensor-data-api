@@ -1,5 +1,5 @@
-# Use the standard Python 3.10 image (not Alpine)
-FROM python:3.10
+# Base image
+FROM python:3.10 AS base
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -28,5 +28,14 @@ RUN poetry install
 # Expose the port the app runs on
 EXPOSE 5001
 
+# Production stage
+FROM base AS prod
+
 # Command to run the application
 CMD ["make", "run"]
+
+# Test stage
+FROM base AS test
+
+# Command to run the tests
+CMD ["make", "test"]
