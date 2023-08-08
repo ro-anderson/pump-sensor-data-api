@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from src.infra.v1.models.sensors_model import DataInputModel
-from typing import List, Dict, Optional
+from src.infra.v1.datasources.transform_data import transform_data
 from src.infra.config import DBConnectionHandler
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy import text
@@ -10,29 +10,6 @@ from pydantic import BaseModel
 import pandas as pd
 
 router = APIRouter()
-
-def transform_data(data_tuples: List[tuple]) -> Dict:
-    if not data_tuples:
-        return {"data": []}
-
-    data = []
-    for item in data_tuples:
-        timestamp, sensor_07, sensor_47, machine_status = item
-        sensors = []
-
-        if sensor_07 is not None and 10 <= sensor_07 <= 30:
-            sensors.append({"name": "sensor_07", "value": sensor_07})
-        
-        if sensor_47 is not None and 20 <= sensor_47 <= 30:
-            sensors.append({"name": "sensor_47", "value": sensor_47})
-
-        data_entry = {
-            "timestamp": timestamp,
-            "machine_status": machine_status,
-            "sensors": sensors
-        }
-        data.append(data_entry)
-    return {"data": data}
 
 @router.get("/data")
 async def get_data():
