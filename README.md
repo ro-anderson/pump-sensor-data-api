@@ -1,57 +1,83 @@
 # Pump Sensor Data API
 
-The Pump Sensor Data API is a FastAPI-based project that provides two main endpoints for working with pump sensor data. The API provides functionalities for filtering specific sensor data based on predefined criteria and for receiving and organizing the data in a specific format.
+Author: [Rodrigo Anderson](https://github.com/ro-anderson) - Software Engineer
+
+
+The Pump Sensor Data API is a FastAPI-based project designed to interact with pump sensor data, originating from [this Kaggle dataset](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data). This study case focuses on practicing API building and handling sensor data. The API provides two main endpoints, offering specific functionalities for filtering sensor data based on predefined criteria and for receiving and organizing the data in a specific format.
 
 ## Disclaimers
 
-1. **Download the Sensor Data (Optional):**
+1. **Database Format and File Management:**
+
+   The original dataset for this project was obtained in CSV format from [Kaggle's Pump Sensor Data project](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data). However, to facilitate data management and improve query performance, it was decided to convert this data into an SQLite database. SQLite offers a lightweight, file-based database solution that doesn't require a separate server process, making it a convenient choice for this project.
+
+   However, it's worth noting that the size of the SQLite database file (`sensor_data.db`) exceeded GitHub's file size limits. Although it's generally not considered best practice to include a database file in a repository, it was necessary to make the project easy to set up and run. To address the size limitation, the database file was compressed into a ZIP file (`sensor_data.db.zip`), which is included in the repository.
+
+   **To use the database, you have two options:**
+
+   - **Unzip the Provided File:** Simply unzip `sensor_data.db.zip` to create the `sensor_data.db` file at the root of the project. This is the quickest way to get started.
    
-   The `sensor.csv` file is not included in the repository, but you don't need it to run the project as the `sensor_data.db.zip` is on the repo - You just need to unzip this file and create the `sensor_data.db` at the root of the project 
-   
-   - If you want to recreate the database yourself, you should:
+   - **Recreate the Database (Optional):** If you prefer to recreate the database yourself, follow these steps:
       
       **i.** Download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data) and place it in the root directory of the project.
       
-      **ii.** Inside a virtualenv (conda, python venv, etc) with `pandas`installed you should run:
+      **ii.** Inside a virtual environment (conda, python venv, etc) with `pandas` installed, run:
         ```bash
         python create_db.py
         ```
 
 2. **Data Filtering Constraints:**
-  
-    At the project scope, the original constraints were to filter data from April 2018 for sensors 07 and 47 with values greater than 20 and less than 30. However, applying these constraints resulted in an empty table result. To maintain alignment with the project's intent, the following constraints are applied instead:
-   - Include values greater than 20 and less than 30 (sensor_47).
-   - Include values greater than 10 and less than 30 (sensor_07).
 
-3. **Database File Inclusion:**
+   During the initial stages of the project, the idea was to filter data from April 2018 for sensors 07 and 47, with values greater than 20 and less than 30. However, applying these constraints resulted in an empty table, as shown below:
    
-   Although it is not considered best practice to include a database file in a repository, it has been included here for ease of use by others developers as: `sensor_data.db.zip`
+   ![Query Without Output](./images/data_query_without_output.png)
+   
+   This outcome was not aligned with the project's objectives, so a decision was made to modify the constraints to include more data. The updated constraints are:
+   
+   - Include values greater than 20 and less than 30 for sensor_47.
+   - Include values greater than 10 and less than 30 for sensor_07.
+   
+   The new constraints allow for meaningful data representation, as evidenced in the following query result:
+   
+   ![Query With Output](./images/data_query_with_output.png)
+   
+   These adjustments maintain the project's alignment with its original intent, while ensuring that the filtered data is representative and meaningful.
 
 ## Features
 
 1. **GET Endpoint**: Filters the sensor data from April 2018 for sensors 07 and 47 with the values according to the constraints mentioned in the disclaimers.
 
-2. **POST Endpoint**: Receives the filtered data and organizes it into a Pandas DataFrame.
+2. **POST Endpoint**: Receives the filtered data and organizes it into a Pandas DataFrame - also print the dataframe at the terminal.
 
-## Installation and Runnig
+## Installation and Running
 
 ### With Docker Compose (Recommended)
 
 1. Clone the repository to your local machine.
 2. Ensure you have [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
-3. Download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data).
-4. Run the following command to create the SQLite database:
+3. Ensure that the `sensor_data.db.zip` file is present in the root directory of the project, and unzip it to extract `sensor_data.db`. Alternatively, you can download the `sensor.csv` file from [Kaggle](https://www.kaggle.com/datasets/nphantawee/pump-sensor-data), place it in the root directory, and run the following command in a Python environment containing the Pandas library:
 
    ```bash
-   make create_db
+   python create_db.py
    ```
 
-5. Run the following command to build and start the containers:
+4. Run the following command to build and start the containers for the production server:
 
    ```bash
-   docker-compose up --build
+   docker-compose up app
    ```
 
+   This will start the server locally, and you can access the API and its documentation at `http://0.0.0.0:5001/docs`.
+
+### Running Tests
+
+1. If you want to run the tests, you can execute the following command:
+
+   ```bash
+   docker-compose up test
+   ```
+
+   This will run the tests inside the Docker container and display the results in the console.
 
 ### With Poetry (Local Development)
 
@@ -79,6 +105,15 @@ curl -sSL https://install.python-poetry.org | python -
    make run
    ```
 
+### Running Tests
+
+1. If you want to run the tests, after creating the poetry setup, you can execute the following command:
+
+   ```bash
+   make test 
+   ```
+
+   This will run the tests locally and display the results in the console.
 
 ## API Endpoints
 
@@ -184,22 +219,3 @@ Here you can explore the API's endpoints, data structures, and more. The main pa
 You can also execute API requests directly from the Swagger UI. Simply click on the endpoint you want to try, fill in any required parameters, and hit the "Execute" button.
 
 ![Executing Requests](./images/executing_request.png) <!-- Replace with the actual path to the screenshot -->
-
-## Project Structure
-
-The project is structured as follows:
-
-```
-- src/
-  - infra/
-    - config/
-      - db_base.py
-      - db_config.py
-    - test/
-- main.py
-- create_db.py
-- Dockerfile
-- docker-compose.yml
-- Makefile
-- README.md
-```
