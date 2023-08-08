@@ -17,7 +17,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Unzip the sensor_data.db.zip file
-RUN unzip sensor_data.db.zip
+RUN unzip -o sensor_data.db.zip
 
 # Check if the sensor_data.db file exists at the root of the project
 RUN [ -f /app/sensor_data.db ] || echo "The file sensor_data.db must be at the root of the project to run. Try to unzip manually before building the image."
