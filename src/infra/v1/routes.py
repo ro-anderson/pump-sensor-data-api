@@ -30,8 +30,7 @@ async def get_data():
 			FROM sensor_data sd
 			WHERE strftime('%Y-%m', timestamp) = '2018-04'
 			AND (sensor_47  BETWEEN  20 AND 30)
-			AND (sensor_07 BETWEEN 10 AND 30)            
-			LIMIT 4
+			AND (sensor_07 BETWEEN 10 AND 30)
             """
             result_proxy = conn.execute(text(query))
             data = result_proxy.fetchall()
