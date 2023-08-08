@@ -1,7 +1,7 @@
-.PHONY: run clean create_db
+.PHONY: run clean create_db test
 
 SHELL=/bin/bash                                                                                                                                                                                             
-## Up the server on 0.0.0.0:5001
+## Up the server on 0.0.0.0:5001 using poetry
 run:
 	poetry run python main.py
 
@@ -12,3 +12,7 @@ clean:
 ## Create sqlite db based on sensor.csv data (download at: https://www.kaggle.com/datasets/nphantawee/pump-sensor-data)
 create_db:
 	poetry run python create_db.py
+
+## Run tests with pytest using poetry
+test:
+	poetry run pytest tests -v
